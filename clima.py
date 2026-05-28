@@ -70,14 +70,14 @@ def pedir_clima():
     """Pide la ciudad por input, consulta la API y muestra el resultado."""
     ciudad = input("Ingresá el nombre de la ciudad: ").strip()
     if not ciudad:
-        print("No ingresaste ninguna ciudad.")
-        return
+        return "Error: No ingresaste ninguna ciudad."
     try:
         datos_crudos = obtener_clima(ciudad, API_KEY, IDIOMA, UNIDADES)
         info = parsear_datos(datos_crudos, UNIDADES)
         mostrar_clima(info)
     except Exception as e:
         return "Error al obtener el clima: " + str(e)
+    return "Clima consultado exitosamente."
 
 def clima():
     
