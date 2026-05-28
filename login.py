@@ -99,6 +99,7 @@ while True:
     
     #Salir
     if opcion == "3":
+        exit()
         break
 
     else:
