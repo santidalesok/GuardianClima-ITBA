@@ -35,13 +35,21 @@ def chequear_seleccion(seleccion):
 def consultar_clima():
     clima_nuevo = clima.pedir_clima()
     if "Error" in clima_nuevo:
-        print(f"Error al consultar el clima: {clima_nuevo}")
+        print(f"{clima_nuevo}")
         decision = input("¿Desea intentar nuevamente? (s/n): ").strip().lower()
         if decision == 's':
             consultar_clima()
         else:
-            print("Regresando al menú principal...\n\n")
-            time.sleep(1.5)
+            print("Regresando al menú principal...\n")
+            time.sleep(1)
+            loop_principal()
+    else:
+        decision = input("¿Desea consultar el clima nuevamente? (s/n): ").strip().lower()
+        if decision == 's':
+            consultar_clima()
+        else:
+            print("Regresando al menú principal...\n")
+            time.sleep(1)
             loop_principal()
 
 def loop_principal():
