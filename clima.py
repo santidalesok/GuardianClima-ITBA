@@ -66,6 +66,18 @@ def mostrar_clima(info):
     print(f"  Viento      : {info['viento']} {info['unidad_viento']}")
     print(f"  Nubosidad   : {info['nubosidad']}%")
 
+def pedir_clima():
+    """Pide la ciudad por input, consulta la API y muestra el resultado."""
+    ciudad = input("Ingresá el nombre de la ciudad: ").strip()
+    if not ciudad:
+        print("No ingresaste ninguna ciudad.")
+        return
+    try:
+        datos_crudos = obtener_clima(ciudad, API_KEY, IDIOMA, UNIDADES)
+        info = parsear_datos(datos_crudos, UNIDADES)
+        mostrar_clima(info)
+    except (PermissionError, ValueError, ConnectionError, RuntimeError) as e:
+        print(f"Error: {e}")
 
 def clima():
     try:
