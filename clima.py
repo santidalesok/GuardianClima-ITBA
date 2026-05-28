@@ -76,10 +76,11 @@ def pedir_clima():
         datos_crudos = obtener_clima(ciudad, API_KEY, IDIOMA, UNIDADES)
         info = parsear_datos(datos_crudos, UNIDADES)
         mostrar_clima(info)
-    except (PermissionError, ValueError, ConnectionError, RuntimeError) as e:
-        print(f"Error: {e}")
+    except Exception as e:
+        return "Error al obtener el clima: " + str(e)
 
 def clima():
+    
     try:
         datos_crudos = obtener_clima(CIUDAD, API_KEY, IDIOMA, UNIDADES)
         info = parsear_datos(datos_crudos, UNIDADES)
