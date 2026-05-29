@@ -39,18 +39,10 @@ def consultar_clima():
         decision = input("¿Desea intentar nuevamente? (s/n): ").strip().lower()
         if decision == 's':
             consultar_clima()
-        else:
-            print("Regresando al menú principal...\n")
-            time.sleep(1)
-            loop_principal()
     else:
         decision = input("¿Desea consultar el clima nuevamente? (s/n): ").strip().lower()
         if decision == 's':
             consultar_clima()
-        else:
-            print("Regresando al menú principal...\n")
-            time.sleep(1)
-            loop_principal()
 
 def loop_principal():
     while True:
