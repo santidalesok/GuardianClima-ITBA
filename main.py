@@ -33,7 +33,7 @@ def chequear_seleccion(seleccion):
     return True
 
 def consultar_clima():
-    clima_nuevo = clima.pedir_clima()
+    clima_nuevo = clima.pedir_clima(login.usuario_ingresado)
     if "Error" in clima_nuevo:
         print(f"{clima_nuevo}")
         decision = input("¿Desea intentar nuevamente? (s/n): ").strip().lower()

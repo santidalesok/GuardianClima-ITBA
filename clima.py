@@ -1,9 +1,12 @@
 import os
+import csv
 import requests
+from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
 
+HISTORIAL_CSV = "historial_global.csv"
 API_KEY  = os.environ["OPENWEATHER_API_KEY"]
 CIUDAD   = "Buenos Aires"
 IDIOMA   = "es"
@@ -66,8 +69,30 @@ def mostrar_clima(info):
     print(f"  Viento      : {info['viento']} {info['unidad_viento']}")
     print(f"  Nubosidad   : {info['nubosidad']}%")
 
-def pedir_clima():
-    """Pide la ciudad por input, consulta la API y muestra el resultado."""
+def guardar_historial(usuario, info):
+    """Agrega una fila al historial global CSV con los datos de la consulta."""
+    archivo_existe = os.path.isfile(HISTORIAL_CSV)
+    with open(HISTORIAL_CSV, "a", newline="", encoding="utf-8") as f:
+        escritor = csv.writer(f)
+        if not archivo_existe:
+            escritor.writerow([
+                "NombreDeUsuario", "Ciudad", "Fecha_Hora",
+                "Temperatura_C", "Condicion_Clima",
+                "Humedad_Porcentaje", "Viento_kmh"
+            ])
+        escritor.writerow([
+            usuario,
+            info["ciudad"],
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            info["temperatura"],
+            info["condicion"],
+            info["humedad"],
+            round(info["viento"] * 3.6, 2),
+        ])
+
+
+def pedir_clima(usuario="desconocido"):
+    """Pide la ciudad por input, consulta la API, muestra el resultado y guarda el historial."""
     ciudad = input("Ingresá el nombre de la ciudad: ").strip()
     if not ciudad:
         return "Error: No ingresaste ninguna ciudad."
@@ -75,6 +100,7 @@ def pedir_clima():
         datos_crudos = obtener_clima(ciudad, API_KEY, IDIOMA, UNIDADES)
         info = parsear_datos(datos_crudos, UNIDADES)
         mostrar_clima(info)
+        guardar_historial(usuario, info)
     except Exception as e:
         return "Error al obtener el clima: " + str(e)
     return "Clima consultado exitosamente."
