@@ -1,2 +1,7 @@
 NombreDeUsuario,Ciudad,Fecha_Hora,Temperatura_C,Condicion_Clima,Humedad_Porcentaje,Viento_kmh
 niepo,Nueva York,2026-05-28 21:10:41,28.5,Clouds,34,21.35
+niepo,Córdoba,2026-05-28 21:14:55,13.64,Clouds,93,1.84
+niepo,Orlando,2026-05-28 21:38:09,25.87,Clouds,89,5.54
+niepo,Buenos Aires,2026-05-29 07:57:21,12.59,Clouds,87,12.96
+niepo,Laos,2026-05-29 19:47:43,23.02,Clouds,88,2.92
+niepo,La Plata,2026-05-29 19:50:31,10.89,Clear,81,8.82

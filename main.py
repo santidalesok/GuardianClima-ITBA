@@ -1,16 +1,18 @@
 import login
 import clima
+import csv
 import time
+from clima import R, B, CY, GR, YE
 
 def menu_principal():
-    print(f"\nBienvenido, {login.usuario_ingresado}!")
-    print("=== MENÚ PRINCIPAL ===")
-    print("1. Consultar clima")
-    print("2. Ver historial")
-    print("3. Estadísticas globales")
-    print("4. Consejo IA")
-    print("5. Acerca de...")
-    print("6. Cerrar sesión")
+    print(f"\n{GR}Bienvenido, {B}{login.usuario_ingresado}{R}{GR}!{R}")
+    print(f"{B}{CY}=== MENÚ PRINCIPAL ==={R}")
+    print(f"  {YE}1.{R} Consultar clima")
+    print(f"  {YE}2.{R} Ver historial")
+    print(f"  {YE}3.{R} Estadísticas globales")
+    print(f"  {YE}4.{R} Consejo IA")
+    print(f"  {YE}5.{R} Acerca de...")
+    print(f"  {YE}6.{R} Cerrar sesión")
     seleccion = input("Seleccione una opción (1-6): ")
     return seleccion
 
@@ -18,7 +20,7 @@ def chequear_seleccion(seleccion):
     if seleccion == '1':
         consultar_clima()
     elif seleccion == '2':
-        print("Funcionalidad de ver historial aún no implementada.")
+        clima.solicitar_consultas(login.usuario_ingresado)
     elif seleccion == '3':
         print("Funcionalidad de estadísticas globales aún no implementada.")
     elif seleccion == '4':

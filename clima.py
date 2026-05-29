@@ -4,6 +4,14 @@ import requests
 from datetime import datetime
 from dotenv import load_dotenv
 
+# Colores para menus mas faciles de ver:
+
+R  = "\033[0m"   # resetear
+B  = "\033[1m"   # negrita
+CY = "\033[96m"  # cian
+GR = "\033[92m"  # verde
+YE = "\033[93m"  # amarillo
+
 load_dotenv()
 
 HISTORIAL_CSV = "historial_global.csv"
@@ -57,17 +65,53 @@ def parsear_datos(datos, unidades="metric"):
         "unidad_viento": unidad_viento,
     }
 
+def solicitar_consultas(usuario):
+    ciudad = input("Ingresá el nombre de la ciudad a buscar: ").strip()
+    if not ciudad:
+        print("No ingresaste ninguna ciudad.")
+        return
+
+    resultados = []
+    try:
+        with open(HISTORIAL_CSV, newline="", encoding="utf-8") as f:
+            lector = csv.DictReader(f)
+            for fila in lector:
+                if (fila["NombreDeUsuario"].lower() == usuario.lower()
+                        and fila["Ciudad"].lower() == ciudad.lower()):
+                    resultados.append(fila)
+    except FileNotFoundError:
+        print("Todavía no hay historial de consultas.")
+        return
+
+    if not resultados:
+        print(f"\nNo se encontraron consultas de '{usuario}' para '{ciudad}'.")
+        return
+
+    print(f"\n{B}{CY}{'─'*60}{R}")
+    print(f"{B}{CY}  Consultas de {usuario} para {resultados[0]['Ciudad']}{R}")
+    print(f"{B}{CY}{'─'*60}{R}")
+    for i, r in enumerate(resultados, 1):
+        print(f"  {B}Consulta #{i}{R}")
+        print(f"    {YE}Fecha/Hora   :{R} {r['Fecha_Hora']}")
+        print(f"    {YE}Temperatura  :{R} {GR}{r['Temperatura_C']} °C{R}")
+        print(f"    {YE}Condición    :{R} {r['Condicion_Clima']}")
+        print(f"    {YE}Humedad      :{R} {r['Humedad_Porcentaje']}%")
+        print(f"    {YE}Viento       :{R} {r['Viento_kmh']} km/h")
+        if i < len(resultados):
+            print()
+    print(f"{CY}{'─'*60}{R}")
+
 
 def mostrar_clima(info):
     """Imprime el resumen del clima en consola."""
     print()
-    print(f"━━━ Clima en {info['ciudad']}, {info['pais']} ━━━")
-    print(f"  Condición   : {info['descripcion'].capitalize()} ({info['condicion']})")
-    print(f"  Temperatura : {info['temperatura']}{info['simbolo_temp']}  (sensación {info['sensacion']}{info['simbolo_temp']})")
-    print(f"  Mín / Máx   : {info['temp_min']}{info['simbolo_temp']} / {info['temp_max']}{info['simbolo_temp']}")
-    print(f"  Humedad     : {info['humedad']}%")
-    print(f"  Viento      : {info['viento']} {info['unidad_viento']}")
-    print(f"  Nubosidad   : {info['nubosidad']}%")
+    print(f"{B}{CY}━━━ Clima en {info['ciudad']}, {info['pais']} ━━━{R}")
+    print(f"  {YE}Condición   :{R} {info['descripcion'].capitalize()} ({info['condicion']})")
+    print(f"  {YE}Temperatura :{R} {GR}{info['temperatura']}{info['simbolo_temp']}{R}  (sensación {info['sensacion']}{info['simbolo_temp']})")
+    print(f"  {YE}Mín / Máx   :{R} {info['temp_min']}{info['simbolo_temp']} / {info['temp_max']}{info['simbolo_temp']}")
+    print(f"  {YE}Humedad     :{R} {info['humedad']}%")
+    print(f"  {YE}Viento      :{R} {info['viento']} {info['unidad_viento']}")
+    print(f"  {YE}Nubosidad   :{R} {info['nubosidad']}%")
 
 def guardar_historial(usuario, info):
     """Agrega una fila al historial global CSV con los datos de la consulta."""
