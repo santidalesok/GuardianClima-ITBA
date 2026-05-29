@@ -71,10 +71,10 @@ def mostrar_clima(info):
 
 def guardar_historial(usuario, info):
     """Agrega una fila al historial global CSV con los datos de la consulta."""
-    archivo_existe = os.path.isfile(HISTORIAL_CSV)
+    archivo_vacio = not os.path.isfile(HISTORIAL_CSV) or os.path.getsize(HISTORIAL_CSV) == 0
     with open(HISTORIAL_CSV, "a", newline="", encoding="utf-8") as f:
         escritor = csv.writer(f)
-        if not archivo_existe:
+        if archivo_vacio:
             escritor.writerow([
                 "NombreDeUsuario", "Ciudad", "Fecha_Hora",
                 "Temperatura_C", "Condicion_Clima",
