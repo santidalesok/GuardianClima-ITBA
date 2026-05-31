@@ -43,8 +43,10 @@ Una de las funcionalidades principales de la aplicacion es consultar el clima en
 En cualquier momento, cualquier usuario puede consultar por consultas hechas por el mismo de cualquier ciudad.
 
 ### Estadísticas globales
+Utilizando data analytics, se ponderan los registros historicos de los usuarios y se devuelve información relevante de las tendencias globales.
 
 ### Consejo IA
 Utilizando la API de gemini, la aplicación permite generar un consejo de vestimenta en funcion del clima.
 
 ### Acerca de...
+Acá se encuentra la información sobre el funcionamiento de la app, el nombre del equipo e información del objetivo del proyecto.
