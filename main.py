@@ -22,13 +22,14 @@ def chequear_seleccion(seleccion):
     if seleccion == '1':
         consultar_clima()
     elif seleccion == '2':
-        clima.solicitar_consultas()
+        clima.solicitar_consultas(login.usuario_ingresado)
     elif seleccion == '3':
         print("Funcionalidad de estadísticas globales aún no implementada.")
     elif seleccion == '4':
         registro = elegir_registro_consejo()
-        if not registro:
+        if registro is None:
             print("No hay registros disponibles para generar un consejo de IA.")
+            return True
         consejo = consejoia.obtener_consejo_ia(registro["Temperatura_C"], registro["Condicion_Clima"], registro["Viento_kmh"], registro["Humedad_Porcentaje"])
         print(f"\n{YE}Consejo:{R}")
         print(consejo)
@@ -68,7 +69,6 @@ def elegir_registro_consejo():
         
         # Si la función de clima devolvió None o una lista vacía, avisamos y salimos
         if not consultas_disponibles:
-            print("⚠️ No se pudieron recuperar registros de esa ciudad.")
             return None
             
         # Si llegó acá, significa que consultas_disponibles SÍ tiene los datos
