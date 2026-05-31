@@ -2,6 +2,7 @@
 import login
 import clima
 import consejoia
+import acercade
 import csv
 import time
 from clima import R, B, CY, GR, YE
@@ -35,7 +36,7 @@ def chequear_seleccion(seleccion):
         print(consejo)
         input(f"\n{YE}Presioná [ENTER] para continuar...{R}")
     elif seleccion == '5':
-        print("Funcionalidad de acerca de... aún no implementada.")
+        acercade.acerca_de()
     elif seleccion == '6':
         print("Cerrando sesión...")
         return False

@@ -152,6 +152,68 @@ def pedir_clima(usuario="desconocido"):
         return "Error al obtener el clima: " + str(e)
     return "Clima consultado exitosamente."
 
+def calcular_estadisticas_globales():
+    """
+    Lee historial_global.csv y calcula estadísticas reales basadas en las columnas:
+    [0]NombreDeUsuario, [1]Ciudad, [2]Fecha_Hora, [3]Temperatura_C, [4]Condicion_Clima, [5]Humedad_Porcentaje, [6]Viento_kmh
+    """
+    import os
+    
+    archivo_csv = "historial_global.csv"
+    
+    if not os.path.exists(archivo_csv):
+        print("\n El archivo de historial global todavía no existe porque no se realizaron consultas.")
+        return None
+
+    try:
+        total_consultas = 0
+        suma_temperaturas = 0.0
+        conteo_ciudades = {}
+
+        with open(archivo_csv, "r", encoding="utf-8") as f:
+            # Saltamos la primera línea porque es el encabezado del archivo
+            encabezado = f.readline() 
+            
+            for linea in f:
+                # Quitamos espacios y dividimos la línea por sus comas
+                datos = linea.strip().split(",")
+                
+                # Validamos que la línea tenga las 7 columnas completas para que no tire IndexError
+                if len(datos) >= 7:
+                    # Guardamos la ciudad limpiando espacios y asegurando el formato
+                    ciudad = datos[1].strip().title() 
+                    
+                    # Extraemos la temperatura convirtiéndola a número flotante (ej: 12.59 o 09.59)
+                    temperatura = float(datos[3].strip())
+                    
+                    total_consultas += 1
+                    suma_temperaturas += temperatura
+                    
+                    # Sumamos al contador de repeticiones de la ciudad
+                    if ciudad in conteo_ciudades:
+                        conteo_ciudades[ciudad] += 1
+                    else:
+                        conteo_ciudades[ciudad] = 1
+
+        if total_consultas == 0:
+            print("\n El historial global está vacío o no contiene registros válidos.")
+            return None
+
+        # Sacamos las cuentas finales con los datos acumulados
+        temperatura_promedio = suma_temperaturas / total_consultas
+        ciudad_mas_consultada = max(conteo_ciudades, key=conteo_ciudades.get)
+        veces_ciudad = conteo_ciudades[ciudad_mas_consultada]
+
+        return {
+            "total": total_consultas,
+            "promedio_temp": temperatura_promedio,
+            "ciudad_top": ciudad_mas_consultada,
+            "ciudad_top_veces": veces_ciudad
+        }
+
+    except Exception as e:
+        print(f"\nError al procesar las estadísticas: {e}")
+        return None
 def clima():
     
     try:
