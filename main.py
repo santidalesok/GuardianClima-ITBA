@@ -1,5 +1,7 @@
+#Ejecutar en la consola: pip install -r requirements.txt
 import login
 import clima
+import consejoia
 import csv
 import time
 from clima import R, B, CY, GR, YE
@@ -20,11 +22,17 @@ def chequear_seleccion(seleccion):
     if seleccion == '1':
         consultar_clima()
     elif seleccion == '2':
-        clima.solicitar_consultas(login.usuario_ingresado)
+        clima.solicitar_consultas()
     elif seleccion == '3':
         print("Funcionalidad de estadísticas globales aún no implementada.")
     elif seleccion == '4':
-        print("Funcionalidad de consejo IA aún no implementada.")
+        registro = elegir_registro_consejo()
+        if not registro:
+            print("No hay registros disponibles para generar un consejo de IA.")
+        consejo = consejoia.obtener_consejo_ia(registro["Temperatura_C"], registro["Condicion_Clima"], registro["Viento_kmh"], registro["Humedad_Porcentaje"])
+        print(f"\n{YE}Consejo:{R}")
+        print(consejo)
+        input(f"\n{YE}Presioná [ENTER] para continuar...{R}")
     elif seleccion == '5':
         print("Funcionalidad de acerca de... aún no implementada.")
     elif seleccion == '6':
@@ -46,6 +54,43 @@ def consultar_clima():
         if decision == 's':
             consultar_clima()
 
+def elegir_registro_consejo():
+    print(f"\n{B}{CY}=== OBTENER CONSEJO DE IA ==={R}")
+    print("Para darte un consejo de vestimenta personalizado, necesitamos datos climáticos.")
+    print("¿Qué deseas hacer?")
+    print(f"  {YE}1.{R} Buscar el historial de una ciudad y elegir una consulta pasada")
+    print(f"  {YE}2.{R} Volver al menú principal")
+
+    opcion = input("Selecciona una opción (1-2): ").strip()
+    
+    if opcion == "1":
+        consultas_disponibles = clima.solicitar_consultas(login.usuario_ingresado)
+        
+        # Si la función de clima devolvió None o una lista vacía, avisamos y salimos
+        if not consultas_disponibles:
+            print("⚠️ No se pudieron recuperar registros de esa ciudad.")
+            return None
+            
+        # Si llegó acá, significa que consultas_disponibles SÍ tiene los datos
+        try:
+            seleccion_num = int(input(f"\nIngresá el número de consulta que querés usar (1-{len(consultas_disponibles)}): "))
+                
+            if 1 <= seleccion_num <= len(consultas_disponibles):
+                registro_elegido = consultas_disponibles[seleccion_num - 1]
+                return registro_elegido
+            else:
+                print(" Número fuera de rango. Operación cancelada.")
+                return None
+        except ValueError:
+            print(" Entrada inválida. Debes ingresar un número entero.")
+            return None
+        
+    elif opcion == "2":
+        return None
+    else: 
+        print(" Opción inválida. Operación cancelada.")
+        return None
+
 def loop_principal():
     while True:
         seleccion = menu_principal()
@@ -54,3 +99,4 @@ def loop_principal():
 
 if __name__ == "__main__":
     loop_principal()
+

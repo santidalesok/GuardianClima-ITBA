@@ -15,7 +15,7 @@ YE = "\033[93m"  # amarillo
 load_dotenv()
 
 HISTORIAL_CSV = "historial_global.csv"
-API_KEY  = os.environ["OPENWEATHER_API_KEY"]
+API_KEY  = os.environ.get("OPENWEATHER_API_KEY")
 CIUDAD   = "Buenos Aires"
 IDIOMA   = "es"
 UNIDADES = "metric"
@@ -24,6 +24,8 @@ URL_BASE = "https://api.openweathermap.org/data/2.5/weather"
 
 def obtener_clima(ciudad, api_key, idioma="es", unidades="metric"):
     """Llama a la API y devuelve el JSON crudo, o lanza una excepción con mensaje claro."""
+    if not api_key:
+        raise ValueError ("API key no encontrada.")
     parametros = {
         "q":     ciudad,
         "appid": api_key,
@@ -85,7 +87,7 @@ def solicitar_consultas(usuario):
 
     if not resultados:
         print(f"\nNo se encontraron consultas de '{usuario}' para '{ciudad}'.")
-        return
+        return resultados
 
     print(f"\n{B}{CY}{'─'*60}{R}")
     print(f"{B}{CY}  Consultas de {usuario} para {resultados[0]['Ciudad']}{R}")
@@ -100,6 +102,7 @@ def solicitar_consultas(usuario):
         if i < len(resultados):
             print()
     print(f"{CY}{'─'*60}{R}")
+    return resultados
 
 
 def mostrar_clima(info):
