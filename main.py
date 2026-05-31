@@ -25,7 +25,22 @@ def chequear_seleccion(seleccion):
     elif seleccion == '2':
         clima.solicitar_consultas(login.usuario_ingresado)
     elif seleccion == '3':
-        print("Funcionalidad de estadísticas globales aún no implementada.")
+        print(f"\n{B}{CY}=== ESTADÍSTICAS GLOBALES DEL SISTEMA ==={R}")
+        print("Procesando datos históricos de todos los usuarios...")
+        stats = clima.calcular_estadisticas_globales()
+        if stats is None:
+            print("No hay datos disponibles para generar estadísticas globales.")
+            return True
+        print("\n-------------------------------------------------")
+        print(f" Número total de consultas: {stats['total']}")
+        print(f" Temperatura promedio registrada: {stats['promedio_temp']:.1f}°C")
+        print(f" Ciudad más consultada por la comunidad: {stats['ciudad_top']} ({stats['ciudad_top_veces']} veces)")
+        print("-------------------------------------------------")
+        print(f"\n{GR} Nota: El archivo 'historial_global.csv' se encuentra actualizado")
+        print(f"para ser exportado y analizado en Excel o Google Sheets.{R}")
+        
+        # Hacemos la pausa obligatoria para que el usuario pueda leer los números
+        input(f"\n{YE}Presioná [ENTER] para volver al menú...{R}")
     elif seleccion == '4':
         registro = elegir_registro_consejo()
         if registro is None:
