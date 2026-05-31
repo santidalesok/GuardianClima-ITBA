@@ -2,6 +2,7 @@
 import login
 import clima
 import consejoia
+import acercade
 import csv
 import time
 from clima import R, B, CY, GR, YE
@@ -35,7 +36,7 @@ def chequear_seleccion(seleccion):
         print(consejo)
         input(f"\n{YE}Presioná [ENTER] para continuar...{R}")
     elif seleccion == '5':
-        print("Funcionalidad de acerca de... aún no implementada.")
+        acercade.acerca_de()
     elif seleccion == '6':
         print("Cerrando sesión...")
         return False
@@ -57,38 +58,37 @@ def consultar_clima():
 
 def elegir_registro_consejo():
     print(f"\n{B}{CY}=== OBTENER CONSEJO DE IA ==={R}")
-    print("Para darte un consejo de vestimenta personalizado, necesitamos datos climáticos.")
-    print("¿Qué deseas hacer?")
-    print(f"  {YE}1.{R} Buscar el historial de una ciudad y elegir una consulta pasada")
-    print(f"  {YE}2.{R} Volver al menú principal")
 
-    opcion = input("Selecciona una opción (1-2): ").strip()
-    
-    if opcion == "1":
-        consultas_disponibles = clima.solicitar_consultas(login.usuario_ingresado)
-        
-        # Si la función de clima devolvió None o una lista vacía, avisamos y salimos
-        if not consultas_disponibles:
-            return None
-            
-        # Si llegó acá, significa que consultas_disponibles SÍ tiene los datos
-        try:
-            seleccion_num = int(input(f"\nIngresá el número de consulta que querés usar (1-{len(consultas_disponibles)}): "))
-                
-            if 1 <= seleccion_num <= len(consultas_disponibles):
-                registro_elegido = consultas_disponibles[seleccion_num - 1]
-                return registro_elegido
-            else:
-                print(" Número fuera de rango. Operación cancelada.")
-                return None
-        except ValueError:
-            print(" Entrada inválida. Debes ingresar un número entero.")
-            return None
-        
-    elif opcion == "2":
+    registros = []
+    try:
+        with open(clima.HISTORIAL_CSV, newline="", encoding="utf-8") as f:
+            for fila in csv.DictReader(f):
+                if fila["NombreDeUsuario"].lower() == login.usuario_ingresado.lower():
+                    registros.append(fila)
+    except FileNotFoundError:
+        pass
+
+    if not registros:
+        print("No hay consultas previas disponibles. Consultá el clima primero.")
         return None
-    else: 
-        print(" Opción inválida. Operación cancelada.")
+
+    print(f"\n{B}{CY}{'─'*60}{R}")
+    print(f"  Tus consultas recientes:")
+    print(f"{B}{CY}{'─'*60}{R}")
+    for i, r in enumerate(registros, 1):
+        print(f"  {YE}{i}.{R} {r['Ciudad']} — {r['Fecha_Hora']} — {GR}{r['Temperatura_C']}°C{R}")
+    print(f"{CY}{'─'*60}{R}")
+
+    try:
+        seleccion_num = int(input(f"\nIngresá el número de consulta a usar (1-{len(registros)}), o 0 para volver: "))
+        if seleccion_num == 0:
+            return None
+        if 1 <= seleccion_num <= len(registros):
+            return registros[seleccion_num - 1]
+        print("Número fuera de rango. Operación cancelada.")
+        return None
+    except ValueError:
+        print("Entrada inválida. Debes ingresar un número entero.")
         return None
 
 def loop_principal():
